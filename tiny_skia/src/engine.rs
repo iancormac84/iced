@@ -1,5 +1,6 @@
 use crate::Primitive;
 use crate::core::renderer::Quad;
+use crate::core::text::{Editor, Paragraph};
 use crate::core::{
     Background, Color, Gradient, Rectangle, Size, Transformation, Vector,
 };
@@ -341,7 +342,7 @@ impl Engine {
                 };
 
                 let physical_bounds =
-                    Rectangle::new(*position, paragraph.min_bounds)
+                    Rectangle::new(*position, paragraph.min_bounds())
                         * transformation;
 
                 if !clip_bounds.intersects(&physical_bounds) {
@@ -380,7 +381,7 @@ impl Engine {
                 };
 
                 let physical_bounds =
-                    Rectangle::new(*position, editor.bounds) * transformation;
+                    Rectangle::new(*position, editor.bounds()) * transformation;
 
                 if !clip_bounds.intersects(&physical_bounds) {
                     return;
