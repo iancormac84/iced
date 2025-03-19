@@ -454,8 +454,12 @@ fn prepare(
     let allocations: Vec<_> = sections
         .iter()
         .map(|section| match section {
-            Text::Paragraph { paragraph, .. } => paragraph.upgrade().map(Allocation::Paragraph),
-            Text::Editor { editor, .. } => editor.upgrade().map(Allocation::Editor),
+            Text::Paragraph { paragraph, .. } => {
+                Some(Allocation::Paragraph(paragraph.clone()))
+            }
+            Text::Editor { editor, .. } => {
+                Some(Allocation::Editor(editor.clone()))
+            }
             Text::Cached {
                 content,
                 bounds,
