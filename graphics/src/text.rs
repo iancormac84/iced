@@ -11,7 +11,7 @@ pub use cosmic_text;
 
 use crate::core::alignment;
 use crate::core::font::{self, Font};
-use crate::core::text::{Alignment, Ellipsis, Shaping, Wrapping};
+use crate::core::text::{Alignment, Editor as _, Ellipsis, Paragraph as _, Shaping, Wrapping};
 use crate::core::{Color, Pixels, Point, Rectangle, Size, Transformation};
 
 use std::borrow::Cow;
@@ -24,7 +24,7 @@ pub enum Text {
     /// A paragraph.
     #[allow(missing_docs)]
     Paragraph {
-        paragraph: paragraph::Weak,
+        paragraph: Paragraph,
         position: Point,
         color: Color,
         clip_bounds: Rectangle,
@@ -33,7 +33,7 @@ pub enum Text {
     /// An editor.
     #[allow(missing_docs)]
     Editor {
-        editor: editor::Weak,
+        editor: Editor,
         position: Point,
         color: Color,
         clip_bounds: Rectangle,
@@ -84,7 +84,7 @@ impl Text {
                 clip_bounds,
                 transformation,
                 ..
-            } => Rectangle::new(*position, paragraph.min_bounds)
+            } => Rectangle::new(*position, paragraph.min_bounds())
                 .intersection(clip_bounds)
                 .map(|bounds| bounds * *transformation),
             Text::Editor {
@@ -93,7 +93,7 @@ impl Text {
                 clip_bounds,
                 transformation,
                 ..
-            } => Rectangle::new(*position, editor.bounds)
+            } => Rectangle::new(*position, editor.bounds())
                 .intersection(clip_bounds)
                 .map(|bounds| bounds * *transformation),
             Text::Cached {
