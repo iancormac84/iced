@@ -516,6 +516,7 @@ async fn run_instance<P>(
     let mut ui_caches = FxHashMap::default();
     let mut user_interfaces = ManuallyDrop::new(FxHashMap::default());
     let mut clipboard = Clipboard::unconnected();
+    println!("Running inside run_instance, just after making clipboard");
 
     loop {
         // Empty the queue if possible
@@ -640,6 +641,7 @@ async fn run_instance<P>(
                 ));
 
                 if clipboard.window_id().is_none() {
+                    println!("Connecting clipboard to a window");
                     clipboard = Clipboard::connect(window.raw.clone());
                 }
 
@@ -1122,9 +1124,11 @@ fn run_action<'a, P, C>(
         }
         Action::Clipboard(action) => match action {
             clipboard::Action::Read { target, channel } => {
+                println!("Got clipboard read action");
                 let _ = channel.send(clipboard.read(target));
             }
             clipboard::Action::Write { target, contents } => {
+                println!("Got clipboard write action");
                 clipboard.write(target, contents);
             }
         },
